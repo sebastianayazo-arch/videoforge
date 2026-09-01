@@ -53,9 +53,17 @@ stock. Fuentes al final.
 
 ## 7. QC de voz (herramienta)
 `integrations/voice_analyze.py` mide un VO: **palabras/s (WPM)**, **pitch mediano
-+ variación**, **% de silencio**, y **compara contra una referencia** (la voz de
-la modelo) para validar que la cadencia concuerda. Targets: 2.5–3.3 pal/s, silencio
-<15%, pitch-std 20–45 Hz, y |Δpal/s vs modelo| < ~0.6.
++ variación**, **% de silencio real (por energía)**, y **compara contra una
+referencia** (la voz de la modelo). Targets por `--mode`:
+- **narration** (por defecto): 2.5–3.3 pal/s, silencio <15%, pitch-std 20–45 Hz.
+- **hook** (pregunta / situación relatable): puede **respirar** (1.9–3.0 pal/s) y
+  llevar **más entonación** (pitch-std 28–75 Hz) para implicar la pregunta y armar
+  el problema→solución. NO aplanar ni acelerar de más un hook.
+- Cadencia: |Δpal/s vs modelo| < ~0.7.
+
+**Aprendizaje clave:** para un hook, generar varios takes y elegir con la
+herramienta; NO usar `silenceremove`/`atempo` agresivos — matan las pausas y la
+entonación de pregunta. Preferir un `exaggeration` alto (~0.75) + solo cleanup.
 
 ---
 ### Fuentes

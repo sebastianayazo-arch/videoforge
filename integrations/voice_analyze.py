@@ -16,10 +16,14 @@ pitch-std 20–45 Hz (>60 = over-dramatic), |Δwords/s vs reference| < 0.6.
 """
 import argparse, json, sys
 
-TARGET_WPS = (2.5, 3.3)
-TARGET_SILENCE_MAX = 0.15
-TARGET_PITCH_STD = (18.0, 45.0)
-CADENCE_MATCH_MAX_DELTA = 0.6
+# Narration: steady pace, moderate intonation. Hook (a question / relatable
+# situation): allowed to breathe (slower, emphatic) and carry MORE intonation to
+# imply the question and set up the problem→solution.
+TARGETS = {
+    "narration": {"wps": (2.5, 3.3), "silence": 0.15, "pitch_std": (18.0, 45.0)},
+    "hook": {"wps": (1.9, 3.0), "silence": 0.20, "pitch_std": (28.0, 75.0)},
+}
+CADENCE_MATCH_MAX_DELTA = 0.7
 
 
 def _metrics(path, words):
@@ -55,7 +59,11 @@ def main() -> int:
     ap.add_argument("--words", type=int, required=True)
     ap.add_argument("--ref", default=None, help="reference clip (model's voice)")
     ap.add_argument("--ref-words", dest="ref_words", type=int, default=None)
+    ap.add_argument("--mode", choices=["narration", "hook"], default="narration")
     args = ap.parse_args()
+
+    T = TARGETS[args.mode]
+    WPS, SIL, PSTD = T["wps"], T["silence"], T["pitch_std"]
 
     try:
         m = _metrics(args.audio, args.words)
@@ -64,18 +72,18 @@ def main() -> int:
         return 0
 
     flags = []
-    if m["wordsPerSec"] < TARGET_WPS[0]:
-        flags.append(f"too slow ({m['wordsPerSec']} w/s < {TARGET_WPS[0]}); speed up (atempo) or lower cfg_weight")
-    if m["wordsPerSec"] > TARGET_WPS[1]:
-        flags.append(f"too fast ({m['wordsPerSec']} w/s > {TARGET_WPS[1]}); rushed")
-    if m["silenceRatio"] > TARGET_SILENCE_MAX:
-        flags.append(f"too much silence ({int(m['silenceRatio']*100)}% > {int(TARGET_SILENCE_MAX*100)}%); trim / silenceremove")
-    if m["pitchStdHz"] > TARGET_PITCH_STD[1]:
-        flags.append(f"over-dramatic pitch (std {m['pitchStdHz']} > {TARGET_PITCH_STD[1]}); lower exaggeration")
-    if m["pitchStdHz"] < TARGET_PITCH_STD[0] and m["pitchStdHz"] > 0:
-        flags.append(f"flat/monotone (std {m['pitchStdHz']} < {TARGET_PITCH_STD[0]}); raise exaggeration")
+    if m["wordsPerSec"] < WPS[0]:
+        flags.append(f"too slow ({m['wordsPerSec']} w/s < {WPS[0]}); speed up (atempo) or lower cfg_weight")
+    if m["wordsPerSec"] > WPS[1]:
+        flags.append(f"too fast ({m['wordsPerSec']} w/s > {WPS[1]}); rushed — a hook should breathe")
+    if m["silenceRatio"] > SIL:
+        flags.append(f"too much silence ({int(m['silenceRatio']*100)}% > {int(SIL*100)}%); trim / silenceremove")
+    if m["pitchStdHz"] > PSTD[1]:
+        flags.append(f"over-dramatic pitch (std {m['pitchStdHz']} > {PSTD[1]}); lower exaggeration")
+    if m["pitchStdHz"] < PSTD[0] and m["pitchStdHz"] > 0:
+        flags.append(f"flat/monotone (std {m['pitchStdHz']} < {PSTD[0]}); raise exaggeration / more intonation")
 
-    out = {"metrics": m, "targets": {"wordsPerSec": TARGET_WPS, "silenceRatioMax": TARGET_SILENCE_MAX, "pitchStdHz": TARGET_PITCH_STD}}
+    out = {"mode": args.mode, "metrics": m, "targets": {"wordsPerSec": WPS, "silenceRatioMax": SIL, "pitchStdHz": PSTD}}
 
     if args.ref and args.ref_words:
         try:
