@@ -1,8 +1,8 @@
 {
-  "brand": "Silueta",
+  "brand": "Salomé",
   "category": "shapewear",
   "palette": ["#2B1B2E", "#C9748A", "#E8C9B0", "#F4EDE6", "#1A1015"],
-  "logo": "brands/silueta/logo/silueta-wordmark.svg",
+  "logo": "brands/salome/logo/salome-wordmark.svg",
   "tone": "Cercana, segura de sí misma y sin culpas. Habla de comodidad, postura y confianza, no de bajar de peso. Tuteo colombiano cálido, frases cortas, cero vergüenza corporal. La faja es una aliada, no una solución a un 'defecto'.",
   "captions": {
     "h1Font": "Montserrat",
@@ -19,11 +19,11 @@
   "voice": {
     "samples": [
       {
-        "file": "brands/silueta/voice-samples/carolina-ref-01.wav",
+        "file": "brands/salome/voice-samples/carolina-ref-01.wav",
         "note": "Locutora principal Carolina, 14.3s, español CO, mono 24kHz. Referencia principal para clonación (Chatterbox). Consentimiento: release firmado en poder del titular de derechos; registrado 2026-08-31. Ver voice-samples/CONSENT.json."
       },
       {
-        "file": "brands/silueta/voice-samples/carolina-ref-02.wav",
+        "file": "brands/salome/voice-samples/carolina-ref-02.wav",
         "note": "Misma locutora Carolina, 13.6s, español CO, mono 24kHz. Muestra alterna/energética. Consentimiento: release firmado en poder del titular; registrado 2026-08-31. Ver voice-samples/CONSENT.json."
       }
     ],
@@ -36,21 +36,21 @@
       {
         "modelId": "mdl-carolina-restrepo",
         "displayName": "Carolina R.",
-        "faceRef": "brands/silueta/faces/carolina.embedding.json",
+        "faceRef": "brands/salome/faces/carolina.embedding.json",
         "authorizedForPaid": true,
         "authorizedUntil": "2027-06-14"
       },
       {
         "modelId": "mdl-daniela-gomez",
         "displayName": "Daniela G.",
-        "faceRef": "brands/silueta/faces/daniela.embedding.json",
+        "faceRef": "brands/salome/faces/daniela.embedding.json",
         "authorizedForPaid": true,
         "authorizedUntil": "2026-12-31"
       },
       {
         "modelId": "mdl-invitada-ugc-julio",
         "displayName": "Invitada UGC (colaboración julio)",
-        "faceRef": "brands/silueta/faces/invitada-julio.embedding.json",
+        "faceRef": "brands/salome/faces/invitada-julio.embedding.json",
         "authorizedForPaid": false
       }
     ]
@@ -74,7 +74,7 @@
     "temperature": "warm",
     "contrast": "medium",
     "saturation": "natural",
-    "lut": "brands/silueta/luts/silueta-warm-natural.cube",
+    "lut": "brands/salome/luts/salome-warm-natural.cube",
     "skinHueRange": [15, 50]
   },
   "copy": {
@@ -185,6 +185,6 @@
       "bpm": [80, 92]
     }
   ],
-  "sonicLogo": "brands/silueta/sonic-logo/silueta-sonic-logo.wav",
+  "sonicLogo": "brands/salome/sonic-logo/salome-sonic-logo.wav",
   "degraded": []
 }

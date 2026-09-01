@@ -9,6 +9,12 @@
  */
 import { Config } from "@remotion/cli/config";
 
+// Encode H.264 as limited-range yuv420p — the maximum-compatibility pixel format
+// across TikTok/Meta/YouTube players (Remotion's JPEG frame pipeline otherwise
+// tags full-range yuvj420p, which QC flags). Config-level so every render and
+// every ratio export inherits it, not just CLI invocations that pass the flag.
+Config.setPixelFormat("yuv420p");
+
 Config.overrideWebpackConfig((config) => {
   return {
     ...config,

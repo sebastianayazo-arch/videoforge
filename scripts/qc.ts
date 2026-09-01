@@ -45,14 +45,37 @@ interface LoudnormJson {
   target_offset?: string;
 }
 
+/** Outcome of a loudness measurement, distinguishing why it may be absent. */
+export type LoudnessResult =
+  | { status: "ok"; m: LoudnessMeasurement }
+  | { status: "no-ffmpeg" }
+  | { status: "no-json" };
+
+/**
+ * Parse an ffmpeg numeric string. ffmpeg (incl. 9.x) emits "-inf"/"inf" for a
+ * silent or clipping signal; map those to ±Infinity instead of NaN so a silent
+ * master is *measured* (and fails the target honestly) rather than looking
+ * unmeasurable.
+ */
+function parseFfmpegNum(v: string | undefined): number {
+  if (v == null) return NaN;
+  const s = v.trim().toLowerCase();
+  if (s === "-inf") return -Infinity;
+  if (s === "inf" || s === "+inf") return Infinity;
+  return Number(s);
+}
+
 /**
  * Two-pass loudnorm MEASUREMENT (pass 1). Runs the analysis pass with
- * print_format=json and parses the JSON it prints to stderr. Returns null if
- * ffmpeg is unavailable or the JSON can't be parsed. (Pass 2 — the actual
- * normalisation — is done at render time using these measured values.)
+ * print_format=json and parses the JSON block it prints to stderr. (Pass 2 —
+ * the actual normalisation — is done at render/master time using these values.)
+ *
+ * Returns a discriminated result so the caller can tell "ffmpeg unavailable"
+ * from "ran but produced no parseable JSON" from a real measurement — the old
+ * code collapsed all three into a null labelled "ffmpeg missing".
  */
-export function measureLoudness(master: string): LoudnessMeasurement | null {
-  if (!hasBinary("ffmpeg") || !existsSync(master)) return null;
+export function measureLoudness(master: string): LoudnessResult {
+  if (!hasBinary("ffmpeg") || !existsSync(master)) return { status: "no-ffmpeg" };
   const res = spawnSync(
     "ffmpeg",
     [
@@ -69,24 +92,48 @@ export function measureLoudness(master: string): LoudnessMeasurement | null {
     { encoding: "utf8", maxBuffer: 1 << 24 },
   );
   const stderr = res.stderr ?? "";
-  // The measurement block is the final flat JSON object in stderr.
+  // The measurement block is the final flat JSON object in stderr. [^{}] spans
+  // newlines/tabs (the block is pretty-printed) but stops at any nested brace.
   const matches = stderr.match(/\{[^{}]*"input_i"[^{}]*\}/g);
   const last = matches?.[matches.length - 1];
-  if (!last) {
-    log.degraded("loudnorm produced no JSON — cannot measure loudness");
-    return null;
-  }
+  if (!last) return { status: "no-json" };
   let parsed: LoudnormJson;
   try {
     parsed = JSON.parse(last) as LoudnormJson;
   } catch {
-    return null;
+    return { status: "no-json" };
   }
-  const i = Number(parsed.input_i);
-  const tp = Number(parsed.input_tp);
-  const lra = Number(parsed.input_lra);
-  if (!Number.isFinite(i) || !Number.isFinite(tp)) return null;
-  return { integratedLUFS: i, truePeakDb: tp, lra: Number.isFinite(lra) ? lra : 0 };
+  const i = parseFfmpegNum(parsed.input_i);
+  const tp = parseFfmpegNum(parsed.input_tp);
+  const lra = parseFfmpegNum(parsed.input_lra);
+  // NaN means the field was absent/garbage; ±Infinity is a valid (silent/clip)
+  // reading we keep so the target check can fail it honestly.
+  if (Number.isNaN(i) || Number.isNaN(tp)) return { status: "no-json" };
+  return {
+    status: "ok",
+    m: { integratedLUFS: i, truePeakDb: tp, lra: Number.isFinite(lra) ? lra : 0 },
+  };
+}
+
+/** Container duration in seconds via ffprobe; 0 if unavailable. */
+function probeDurationSec(master: string): number {
+  if (!hasBinary("ffprobe") || !existsSync(master)) return 0;
+  const raw = tryRun("ffprobe", [
+    "-v",
+    "quiet",
+    "-print_format",
+    "json",
+    "-show_format",
+    master,
+  ]);
+  if (raw == null) return 0;
+  try {
+    const j = JSON.parse(raw) as { format?: { duration?: string } };
+    const d = Number(j.format?.duration ?? 0);
+    return Number.isFinite(d) && d > 0 ? d : 0;
+  } catch {
+    return 0;
+  }
 }
 
 /** ffprobe container/codec/dimension checks. */
@@ -162,7 +209,8 @@ export function verificationFrames(
   durationSec: number,
   workDir: string,
 ): string[] {
-  if (!hasBinary("ffmpeg") || !existsSync(master) || durationSec <= 0) return [];
+  // `!(x > 0)` also rejects NaN (a malformed plan can yield NaN duration).
+  if (!hasBinary("ffmpeg") || !existsSync(master) || !(durationSec > 0)) return [];
   ensureDir(workDir);
   const frames: string[] = [];
   for (const pct of [0.1, 0.5, 0.9]) {
@@ -204,33 +252,51 @@ export function runQC(input: QCInput): QCReport {
   checks.push(...ffprobeChecks(input.master));
 
   // 2. Loudness (two-pass measurement).
-  const loudness = measureLoudness(input.master) ?? undefined;
-  if (loudness) {
+  const loud = measureLoudness(input.master);
+  const loudness = loud.status === "ok" ? loud.m : undefined;
+  const fmtLufs = (n: number) =>
+    Number.isFinite(n) ? n.toFixed(1) : n < 0 ? "-inf" : "inf";
+  if (loud.status === "ok") {
+    const { m } = loud;
     const iOk =
-      Math.abs(loudness.integratedLUFS - TARGET_LUFS) <= LUFS_TOLERANCE;
-    const tpOk = loudness.truePeakDb <= TARGET_TP;
+      Number.isFinite(m.integratedLUFS) &&
+      Math.abs(m.integratedLUFS - TARGET_LUFS) <= LUFS_TOLERANCE;
+    const tpOk = m.truePeakDb <= TARGET_TP;
     checks.push({
       name: "audio.loudness.integrated",
       pass: iOk,
-      detail: `${loudness.integratedLUFS.toFixed(1)} LUFS (target ${TARGET_LUFS}±${LUFS_TOLERANCE})`,
+      detail: `${fmtLufs(m.integratedLUFS)} LUFS (target ${TARGET_LUFS}±${LUFS_TOLERANCE})`,
     });
     checks.push({
       name: "audio.loudness.true-peak",
       pass: tpOk,
-      detail: `${loudness.truePeakDb.toFixed(1)} dBTP (max ${TARGET_TP})`,
+      detail: `${fmtLufs(m.truePeakDb)} dBTP (max ${TARGET_TP})`,
     });
   } else {
+    // Genuinely could not measure: ffmpeg absent, or ran but no parseable JSON.
+    // Degrades (pass:true) rather than failing — but says which, honestly.
     checks.push({
       name: "audio.loudness",
       pass: true,
-      detail: "DEGRADED: loudness not measured (ffmpeg missing)",
+      detail:
+        loud.status === "no-ffmpeg"
+          ? "DEGRADED: loudness not measured (ffmpeg unavailable)"
+          : "DEGRADED: loudnorm ran but produced no parseable JSON",
     });
   }
 
-  // 3. Verification frames (recorded in the report detail).
-  const durationSec = input.plan
+  // 3. Verification frames (recorded in the report detail). Duration comes from
+  // the plan when present, else straight from the container via ffprobe so a
+  // bare `--master` still pulls real frames instead of degrading.
+  const planDur = input.plan
     ? input.plan.durationFrames / (input.plan.fps || 30)
-    : 0;
+    : NaN;
+  // Fall back to the container's own duration whenever the plan is absent or
+  // doesn't carry a usable durationFrames/fps (e.g. a partial plan artefact).
+  const durationSec =
+    Number.isFinite(planDur) && planDur > 0
+      ? planDur
+      : probeDurationSec(input.master);
   const frames = verificationFrames(input.master, durationSec, workDir);
   checks.push({
     name: "verification.frames",

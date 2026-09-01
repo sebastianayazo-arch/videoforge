@@ -46,7 +46,7 @@ transitions, captions, pacing and colour. Feed the aggregate into the brand's
 - **Crossfade** only on the mood/testimonial close — never on beat edits or
   offers.
 - **Glitch: effectively absent** in premium shapewear grammar; reads cheap.
-  (Silueta bans it.)
+  (Salomé bans it.)
 
 Maps to `BrandTransitionsProfile.weights`:
 `hard-cut` high, `action-cut-whip` medium, `zoom-punch`/`match-cut` low-medium,

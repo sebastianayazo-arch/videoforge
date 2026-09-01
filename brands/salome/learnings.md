@@ -1,4 +1,4 @@
-# Silueta — Learning log (Module 12)
+# Salomé — Learning log (Module 12)
 
 Human-readable record of what the learning loop promoted and archived. Each
 entry is dated and states **what won**, **what was archived**, and **how the

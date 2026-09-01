@@ -1,4 +1,4 @@
-# Voice samples — Silueta
+# Voice samples — Salomé
 
 This folder holds the **reference recordings** used to clone the brand voice
 (Module 9A / `BrandVoiceProfile.samples`). The engine of record is
@@ -28,7 +28,7 @@ Current samples:
 
 `voice.consent` **must be `true`** with a `voice.consentDate` before ANY cloned
 narration is generated. The signed consent authorises cloning this specific
-voice for Silueta content. No consent on file ⇒ the pipeline falls back to
+voice for Salomé content. No consent on file ⇒ the pipeline falls back to
 **recorded** VO only and blocks any `vo.source: "cloned"` scene.
 
 The `.wav` files themselves are **git-ignored** (media never lives in the repo);

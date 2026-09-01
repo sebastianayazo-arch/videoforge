@@ -39,7 +39,7 @@ elegancia y registra qué falta.
 | Compliance de categoría (`scripts/policy-check.ts`) | ✅ Reglas Meta/TikTok verificadas 2026‑09 |
 | Muro legal de audio (`scripts/music.ts::assertPaidSafe`) | ✅ Gate por licencia/plataforma |
 | Render Remotion (`src/Main.tsx`, componentes) | ✅ Composición que abre en Studio (placeholders donde no hay clip) |
-| Perfil de marca + templates + hooks + referencias | ✅ Ejemplo `brands/silueta` + 5 ramas |
+| Perfil de marca + templates + hooks + referencias | ✅ Ejemplo `brands/salome` + 5 ramas |
 | FFmpeg/ffprobe (ingest, color, stabilize, qc, loudnorm) | ✅ Comandos reales; degradan si falta el input |
 | WhisperX / Chatterbox / ACE‑Step / MediaPipe | 🟡 Interfaz + shell‑out real, **stub degradado** si el binario no está |
 | Scraping de marca / referentes (yt‑dlp / mcp‑video‑analyzer) | 🟡 Interfaz + degradación elegante |

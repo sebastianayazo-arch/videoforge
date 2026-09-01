@@ -334,6 +334,65 @@ export function buildScript(args: {
   };
 }
 
+const VALID_PLATFORMS = ["tiktok", "instagram", "youtube", "meta"];
+const VALID_MARKETS = ["CO", "MX", "US-latino", "other"];
+const VALID_RATIOS = ["9:16", "4:5", "1:1"];
+
+/**
+ * Validate a parsed intake against the Intake contract (schemas/intake.schema.json)
+ * BEFORE building the script, so an incomplete intake yields a precise list of
+ * problems instead of a downstream `undefined.match` crash. Returns [] when valid.
+ */
+export function validateIntake(obj: unknown): string[] {
+  const problems: string[] = [];
+  if (typeof obj !== "object" || obj === null) {
+    return ["intake must be a JSON object"];
+  }
+  const o = obj as Record<string, unknown>;
+  const reqStr = (k: string) => {
+    if (o[k] === undefined) problems.push(`missing required field: ${k}`);
+    else if (typeof o[k] !== "string" || (o[k] as string).trim() === "")
+      problems.push(`field ${k} must be a non-empty string`);
+  };
+  const reqEnumArray = (k: string, allowed: string[], minItems = 0) => {
+    if (o[k] === undefined) {
+      problems.push(`missing required field: ${k}`);
+      return;
+    }
+    if (!Array.isArray(o[k])) {
+      problems.push(`field ${k} must be an array of ${allowed.join("|")}`);
+      return;
+    }
+    const arr = o[k] as unknown[];
+    if (arr.length < minItems)
+      problems.push(`field ${k} must have at least ${minItems} item(s)`);
+    for (const v of arr)
+      if (typeof v !== "string" || !allowed.includes(v))
+        problems.push(`field ${k} has invalid value ${JSON.stringify(v)} (allowed: ${allowed.join(", ")})`);
+  };
+
+  reqStr("objective");
+  reqStr("audience");
+  reqStr("productAngle");
+  reqStr("cta");
+  reqEnumArray("platforms", VALID_PLATFORMS, 1);
+  reqEnumArray("adPlatforms", VALID_PLATFORMS, 0);
+  reqEnumArray("ratios", VALID_RATIOS, 1);
+
+  if (o.durationSec === undefined) problems.push("missing required field: durationSec");
+  else if (typeof o.durationSec !== "number" || !(o.durationSec > 0))
+    problems.push("field durationSec must be a number > 0");
+
+  if (o.market === undefined) problems.push("missing required field: market");
+  else if (!VALID_MARKETS.includes(o.market as string))
+    problems.push(`field market has invalid value ${JSON.stringify(o.market)} (allowed: ${VALID_MARKETS.join(", ")})`);
+
+  if (o.paid === undefined) problems.push("missing required field: paid");
+  else if (typeof o.paid !== "boolean") problems.push("field paid must be a boolean");
+
+  return problems;
+}
+
 function main(): void {
   const argv = process.argv.slice(2);
   const get = (k: string) =>
@@ -352,7 +411,16 @@ function main(): void {
     process.exit(2);
   }
 
-  const intake = readJson<Intake>(intakePath);
+  const intakeRaw = readJson<unknown>(intakePath);
+  const problems = validateIntake(intakeRaw);
+  if (problems.length > 0) {
+    log.warn(
+      `intake invalid (${intakePath}) — ${problems.length} problem(s) vs schemas/intake.schema.json:`,
+    );
+    for (const p of problems) log.item(p);
+    process.exit(2);
+  }
+  const intake = intakeRaw as Intake;
   const brand = readJson<BrandProfile>(brandPath);
   const transcript = transcriptPath
     ? readJson<Transcript>(transcriptPath)
