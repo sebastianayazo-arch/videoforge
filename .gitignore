@@ -37,3 +37,5 @@ cache/
 .env
 .env.local
 .DS_Store
+# render working brand assets (canonical live in brands/<marca>/logo)
+public/brand/

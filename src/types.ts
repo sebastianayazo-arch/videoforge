@@ -292,6 +292,10 @@ export interface CaptionBlock {
   entrance: "fade" | "pop" | "slide-up" | "typewriter";
   /** True if the block was nudged to align with a beat (<120ms). */
   beatAligned: boolean;
+  /** Typographic voice for this block, independent of size level:
+   *  display → h1Font (Montserrat), body → baseFont (Inter, informative),
+   *  script → scriptFont (Playfair, aspirational). Defaults by level. */
+  fontRole?: "display" | "body" | "script";
 }
 
 // ---------------------------------------------------------------------------
@@ -433,12 +437,53 @@ export interface Scene {
   vo?: { text: string; source: "recorded" | "cloned" };
   captions: CaptionBlock[];
   energy: number; // 0..1
+  /** Public-relative clip path for the render (e.g. "clips/hook-2.mp4"). When
+   *  absent the scene renders as a labelled placeholder. */
+  src?: string;
+  /** Mute the clip's own audio (e.g. B-roll whose recorded track is unusable;
+   *  a cloned VO carries the line instead). */
+  muteClipAudio?: boolean;
+}
+
+/** One styled line inside an ad-copy headline (not a karaoke subtitle). */
+export interface CopyLine {
+  text: string;
+  /** display → Montserrat, body → Inter, script → Playfair. */
+  font: "display" | "body" | "script";
+  size: "xl" | "lg" | "md" | "sm";
+  weight?: number;
+  italic?: boolean;
+  /** Whole-line colour role. */
+  color?: "base" | "accent" | "highlight";
+  /** A single word within the line to paint in the accent colour. */
+  accentWord?: string;
+  /** Brand copy treatment on this line: a hand-drawn ellipse around it (used to
+   *  emphasise a key word/number, e.g. a discount), in the accent colour. */
+  highlight?: "circle";
+}
+
+/**
+ * Ad copy block — a designed headline (layered fonts, coloured key word, NO
+ * plate), placed over negative space. This is advertising copy, not subtitles.
+ */
+export interface CopyBlock {
+  id: string;
+  startFrame: Frame;
+  endFrame: Frame;
+  /** Normalised anchor; align controls text-align + anchor meaning. */
+  anchor: { x: number; y: number };
+  align: "left" | "center";
+  lines: CopyLine[];
+  entrance: "fade-up" | "pop" | "none";
 }
 
 export interface Boundary {
   /** Index of the outgoing scene (transition sits between i and i+1). */
   fromScene: number;
   decision: TransitionDecision;
+  /** Dominant optical-flow direction (deg) at the boundary, orients directional
+   *  presentations (whip/match). From the motion analysis. */
+  flowDeg?: number;
 }
 
 export interface RetentionPlan {
@@ -472,6 +517,21 @@ export interface VideoPlan {
   retention: RetentionPlan;
   hookVariants: HookVariant[];
   compliance: ComplianceReport;
+  /** Brand caption styling (fonts + colours) for the render; falls back to a
+   *  neutral default when absent. */
+  captionsProfile?: BrandCaptionsProfile;
+  /** Designed ad-copy headlines (composition-relative), rendered over the
+   *  footage instead of subtitle plates. */
+  copy?: CopyBlock[];
+  /** Brand outro tapa: base-colour ground, wordmark/logo, web + IG handle. */
+  endCard?: {
+    palette?: Hex[];
+    logoSrc?: string;
+    web?: string;
+    instagram?: string;
+    ink?: Hex;
+    accent?: Hex;
+  };
   /** Populated by the render/QC stage. */
   qc?: QCReport;
 }

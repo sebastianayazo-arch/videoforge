@@ -1,18 +1,25 @@
 {
   "brand": "Salomé",
   "category": "shapewear",
-  "palette": ["#2B1B2E", "#C9748A", "#E8C9B0", "#F4EDE6", "#1A1015"],
-  "logo": "brands/salome/logo/salome-wordmark.svg",
-  "tone": "Cercana, segura de sí misma y sin culpas. Habla de comodidad, postura y confianza, no de bajar de peso. Tuteo colombiano cálido, frases cortas, cero vergüenza corporal. La faja es una aliada, no una solución a un 'defecto'.",
+  "palette": [
+    "#C03353",
+    "#DA5539",
+    "#F9A498",
+    "#F6E7D2",
+    "#F9F4EA",
+    "#121212"
+  ],
+  "logo": "brands/salome/logo/salome-logo.png",
+  "tone": "Audaz, femenina, segura y provocadora — pero cálida y cercana (tuteo colombiano). Celebra las curvas, la sensualidad y el poder sin pedir permiso: 'sexy por naturaleza, poderosa por decisión'. Directa y sin filtros pero con intención; halaga y levanta, nunca compite ni juzga. La faja/body es una aliada que libera y realza, no una solución a un 'defecto'. Para pauta: sin claims médicos ni de pérdida de peso, sin lenguaje de vergüenza corporal. Ver brand-system.md.",
   "captions": {
-    "h1Font": "Montserrat",
-    "h2Font": "Montserrat",
-    "baseFont": "Inter",
-    "scriptFont": "Playfair Display",
-    "accentColor": "#C9748A",
-    "highlightColor": "#E8C9B0",
-    "baseTextColor": "#F4EDE6",
-    "outlineColor": "#1A1015",
+    "h1Font": "Causten, Montserrat, sans-serif",
+    "h2Font": "Causten, Montserrat, sans-serif",
+    "baseFont": "Causten, Inter, sans-serif",
+    "scriptFont": "Benton Modern, Playfair Display, serif",
+    "accentColor": "#C03353",
+    "highlightColor": "#F6E7D2",
+    "baseTextColor": "#F9F4EA",
+    "outlineColor": "#121212",
     "contrastStrategy": "both",
     "diacriticsVerified": true
   },
@@ -67,7 +74,9 @@
       "shape-mask": 0.3,
       "luma-matte": 0.15
     },
-    "banned": ["glitch"],
+    "banned": [
+      "glitch"
+    ],
     "notes": "Marca premium-accesible: corta duro en el beat y usa whip solo con movimiento real de cámara. Nada de glitch (rompe la percepción de calidad). Crossfade reservado a cierres mood/testimonio."
   },
   "color": {
@@ -75,7 +84,10 @@
     "contrast": "medium",
     "saturation": "natural",
     "lut": "brands/salome/luts/salome-warm-natural.cube",
-    "skinHueRange": [15, 50]
+    "skinHueRange": [
+      15,
+      50
+    ]
   },
   "copy": {
     "hookFormulas": [
@@ -84,7 +96,13 @@
       "Dejé de {molestia} cuando descubrí {producto}",
       "POV: {escena_de_uso_real}",
       "El error que todas cometemos al elegir faja",
-      "3 razones por las que {producto} se volvió mi básico"
+      "3 razones por las que {producto} se volvió mi básico",
+      "Más curvas, más actitud",
+      "Diseñadas para moldear tu figura. Creada para liberar tu actitud",
+      "La faja no te limita. Te libera",
+      "Admirarte no es un acto de vanidad. Es un acto de poder",
+      "El poder de ser quien eres",
+      "¿Otra vez sin nada que ponerte?"
     ],
     "ctaFormulas": [
       "Consíguela con envío a toda Colombia — link en la bio",
@@ -158,31 +176,80 @@
         "note": "Demo con resultado primero; retención floja en 9:16, mejor en 4:5. Bajo rendimiento en pauta."
       }
     ],
-    "winningHooks": ["ps-teha-pasado", "ugc-dejede", "of-dato-stock"],
-    "winningBranches": ["problema-solucion", "ugc-testimonio"],
-    "winningMusicMoods": ["confianza-elegante", "energia-latina-suave"],
-    "archived": ["of-gancho-lento-v1", "dd-feature-first-v1", "ps-pregunta-generica-v0"]
+    "winningHooks": [
+      "ps-teha-pasado",
+      "ugc-dejede",
+      "of-dato-stock"
+    ],
+    "winningBranches": [
+      "problema-solucion",
+      "ugc-testimonio"
+    ],
+    "winningMusicMoods": [
+      "confianza-elegante",
+      "energia-latina-suave"
+    ],
+    "archived": [
+      "of-gancho-lento-v1",
+      "dd-feature-first-v1",
+      "ps-pregunta-generica-v0"
+    ]
   },
   "musicMoods": [
     {
       "name": "confianza-elegante",
-      "tags": ["deep-house", "elegante", "femenino", "sintetizador-cálido", "premium"],
-      "bpm": [100, 115]
+      "tags": [
+        "deep-house",
+        "elegante",
+        "femenino",
+        "sintetizador-cálido",
+        "premium"
+      ],
+      "bpm": [
+        100,
+        115
+      ]
     },
     {
       "name": "energia-latina-suave",
-      "tags": ["afro-latin-pop", "percusión-suave", "optimista", "guitarra"],
-      "bpm": [95, 110]
+      "tags": [
+        "afro-latin-pop",
+        "percusión-suave",
+        "optimista",
+        "guitarra"
+      ],
+      "bpm": [
+        95,
+        110
+      ]
     },
     {
       "name": "urgencia-oferta",
-      "tags": ["future-bass", "punchy", "riser", "energético", "beat-marcado"],
-      "bpm": [120, 132]
+      "tags": [
+        "future-bass",
+        "punchy",
+        "riser",
+        "energético",
+        "beat-marcado"
+      ],
+      "bpm": [
+        120,
+        132
+      ]
     },
     {
       "name": "intimo-testimonio",
-      "tags": ["lo-fi", "piano", "cálido", "cercano", "acústico"],
-      "bpm": [80, 92]
+      "tags": [
+        "lo-fi",
+        "piano",
+        "cálido",
+        "cercano",
+        "acústico"
+      ],
+      "bpm": [
+        80,
+        92
+      ]
     }
   ],
   "sonicLogo": "brands/salome/sonic-logo/salome-sonic-logo.wav",

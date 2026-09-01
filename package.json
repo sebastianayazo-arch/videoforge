@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@remotion/captions": "4.0.519",
+    "@remotion/google-fonts": "^4.0.519",
     "@remotion/media-utils": "4.0.519",
     "@remotion/transitions": "4.0.519",
     "react": "18.3.1",

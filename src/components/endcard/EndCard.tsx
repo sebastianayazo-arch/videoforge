@@ -1,11 +1,11 @@
 /**
- * EndCard (Module 13 render) — the 2s brand sting.
+ * EndCard — the brand tapa (outro).
  *
- * Logo reveal (spring scale + opacity) over a brand-palette background, then a
- * CTA line springs up under it. Fully driven by brand props so it can be
- * reused across marcas. Presentation-only.
+ * A clean brand close on a base-palette ground: the Salomé wordmark (a real logo
+ * asset if provided, else an elegant Playfair wordmark), the website and the
+ * Instagram handle. Designed to feel like the brand, not break the aesthetic.
+ * Presentation-only; springs in.
  */
-
 import React from "react";
 import {
   AbsoluteFill,
@@ -16,97 +16,87 @@ import {
   useVideoConfig,
 } from "remotion";
 import type { Hex } from "../../types.js";
+import { PLAYFAIR, INTER } from "../../fonts.js";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 export const EndCard: React.FC<{
   brand: string;
-  /** Brand palette; [0] = ground, [1] = accent. */
+  /** Brand palette; [0] = ground. */
   palette?: Hex[];
   cta?: string;
-  /** Optional logo asset; falls back to brand initials. */
   logoSrc?: string;
+  web?: string;
+  instagram?: string;
+  /** Text colour on the ground (defaults to a light cream). */
+  ink?: Hex;
+  accent?: Hex;
 }> = ({
   brand,
-  palette = ["#0A1F44", "#FF2D7E"],
-  cta = "Link en la bio",
+  palette = ["#2B1B2E", "#C9748A", "#E8C9B0", "#F4EDE6"],
   logoSrc,
+  web,
+  instagram,
+  ink = "#F4EDE6",
+  accent = "#C9748A",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // AUDIO: dispara el sonic-logo (brand.sonicLogo) en el frame 0 de esta
-  // Sequence — p.ej. <Audio src={sonicLogo} /> montado junto a este componente.
+  const ground = palette[0] ?? "#2B1B2E";
 
-  const ground = palette[0] ?? "#0A1F44";
-  const accent = palette[1] ?? "#FF2D7E";
+  const logoIn = spring({ frame, fps, config: { damping: 14, mass: 0.8 } });
+  const logoScale = interpolate(logoIn, [0, 1], [0.82, 1]);
+  const logoOpacity = interpolate(frame, [0, 12], [0, 1], clamp);
 
-  const logoIn = spring({ frame, fps, config: { damping: 12, mass: 0.8 } });
-  const logoScale = interpolate(logoIn, [0, 1], [0.6, 1]);
-  const logoOpacity = interpolate(frame, [0, 10], [0, 1], clamp);
-
-  const ctaIn = spring({ frame: frame - 14, fps, config: { damping: 16 } });
-  const ctaY = interpolate(ctaIn, [0, 1], [30, 0]);
-  const ctaOpacity = interpolate(frame - 14, [0, 8], [0, 1], clamp);
-
-  const initials = brand
-    .split(/\s+/)
-    .map((w) => w[0] ?? "")
-    .join("")
-    .slice(0, 3)
-    .toUpperCase();
+  const metaIn = spring({ frame: frame - 12, fps, config: { damping: 18 } });
+  const metaY = interpolate(metaIn, [0, 1], [24, 0]);
+  const metaOpacity = interpolate(frame - 12, [0, 10], [0, 1], clamp);
 
   return (
     <AbsoluteFill
       style={{
-        background: `radial-gradient(120% 120% at 50% 35%, ${accent}22, ${ground})`,
+        backgroundColor: ground,
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
         gap: 40,
-        fontFamily: "Inter, system-ui, sans-serif",
-        color: "#fff",
       }}
     >
-      <div
-        style={{
-          transform: `scale(${logoScale})`,
-          opacity: logoOpacity,
-        }}
-      >
+      <div style={{ opacity: logoOpacity, transform: `scale(${logoScale})`, textAlign: "center" }}>
         {logoSrc ? (
-          <Img src={logoSrc} style={{ width: 320, height: "auto" }} />
+          <Img src={logoSrc} style={{ width: 620, maxWidth: "80%", objectFit: "contain" }} />
         ) : (
           <div
             style={{
-              width: 240,
-              height: 240,
-              borderRadius: 48,
-              background: accent,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 96,
-              fontWeight: 900,
-              letterSpacing: "-0.03em",
+              fontFamily: PLAYFAIR,
+              fontWeight: 700,
+              fontSize: 150,
+              color: ink,
+              letterSpacing: "0.02em",
+              lineHeight: 1,
             }}
           >
-            {initials}
+            {brand}
           </div>
         )}
+        {/* thin rule under the wordmark */}
+        <div style={{ height: 3, width: 220, background: accent, margin: "26px auto 0" }} />
       </div>
 
       <div
         style={{
-          transform: `translateY(${ctaY}px)`,
-          opacity: ctaOpacity,
-          fontSize: 56,
-          fontWeight: 800,
-          letterSpacing: "-0.02em",
-          textShadow: "0 2px 8px rgba(0,0,0,0.4)",
+          opacity: metaOpacity,
+          transform: `translateY(${metaY}px)`,
+          textAlign: "center",
+          fontFamily: INTER,
+          color: ink,
         }}
       >
-        {cta}
+        {web ? <div style={{ fontSize: 40, fontWeight: 600, letterSpacing: "0.02em" }}>{web}</div> : null}
+        {instagram ? (
+          <div style={{ fontSize: 40, fontWeight: 600, marginTop: 12, color: accent }}>{instagram}</div>
+        ) : null}
       </div>
     </AbsoluteFill>
   );

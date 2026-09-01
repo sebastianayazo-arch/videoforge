@@ -88,12 +88,22 @@ export const Caption: React.FC<{
 
   const useOutline = profile.contrastStrategy !== "plate";
   const usePlate = profile.contrastStrategy !== "outline";
-  const font =
+  // Font: an explicit fontRole wins (typographic variety, independent of size),
+  // otherwise fall back to the size level's face.
+  const byLevel =
     block.level === "H1"
       ? profile.h1Font
       : block.level === "H2"
         ? profile.h2Font
         : profile.baseFont;
+  const font =
+    block.fontRole === "display"
+      ? profile.h1Font
+      : block.fontRole === "body"
+        ? profile.baseFont
+        : block.fontRole === "script"
+          ? profile.scriptFont ?? profile.h1Font
+          : byLevel;
 
   return (
     <div
@@ -107,7 +117,9 @@ export const Caption: React.FC<{
         flexWrap: "wrap",
         justifyContent: "center",
         alignItems: "baseline",
-        gap: "0.28em",
+        // Roomy enough that an emphasised word (scaled up to 1.2×) never crowds
+        // its neighbours — captions are the product; legibility wins.
+        gap: "0.16em 0.42em",
         width: "84%",
         textAlign: "center",
         fontFamily: font,
@@ -161,6 +173,7 @@ export const Caption: React.FC<{
               display: "inline-block",
               color,
               opacity: wordOpacity,
+              padding: "0 0.06em",
               transform: `scale(${wordScale})`,
               transformOrigin: "center bottom",
               textShadow: useOutline
