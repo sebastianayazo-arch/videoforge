@@ -19,16 +19,12 @@
   "voice": {
     "samples": [
       {
-        "file": "brands/silueta/voice-samples/carolina-neutral-01.wav",
-        "note": "Locutora principal Carolina, tono neutro conversacional, 22s, español CO. Base para clonación."
+        "file": "brands/silueta/voice-samples/carolina-ref-01.wav",
+        "note": "Locutora principal Carolina, 14.3s, español CO, mono 24kHz. Referencia principal para clonación (Chatterbox). Consentimiento: release firmado en poder del titular de derechos; registrado 2026-08-31. Ver voice-samples/CONSENT.json."
       },
       {
-        "file": "brands/silueta/voice-samples/carolina-energetica-02.wav",
-        "note": "Misma locutora, registro más energético para ganchos y ofertas, 18s."
-      },
-      {
-        "file": "brands/silueta/voice-samples/carolina-calida-03.wav",
-        "note": "Registro cálido/íntimo para testimonio y cierre, 20s."
+        "file": "brands/silueta/voice-samples/carolina-ref-02.wav",
+        "note": "Misma locutora Carolina, 13.6s, español CO, mono 24kHz. Muestra alterna/energética. Consentimiento: release firmado en poder del titular; registrado 2026-08-31. Ver voice-samples/CONSENT.json."
       }
     ],
     "consent": true,

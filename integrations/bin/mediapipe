@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# VideoForge → MediaPipe face detector wrapper (Apple Silicon / CPU).
+# occlusion.ts checks hasBinary("mediapipe") and shells out here with
+#   mediapipe --video V --start-frame N --end-frame M [--samples K]
+# (or --image PATH). Emits {faceBoxes, productBoxes} JSON on stdout.
+set -euo pipefail
+VENV="$HOME/.local/opt/vf-venvs/mediapipe"
+HELPER="$HOME/code/videoforge/integrations/mediapipe_detect.py"
+# Silence MediaPipe's noisy absl/glog lines on stderr so stdout stays clean JSON.
+exec "$VENV/bin/python" "$HELPER" "$@" 2>/dev/null

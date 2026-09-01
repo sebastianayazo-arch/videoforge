@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# VideoForge → Chatterbox Multilingual TTS wrapper (Apple Silicon MPS/CPU).
+# Passes voice.ts's flags (--text --audio-prompt --language --output) straight
+# to the Python helper inside the chatterbox venv.
+set -euo pipefail
+VENV="$HOME/.local/opt/vf-venvs/chatterbox"
+HELPER="$HOME/code/videoforge/integrations/chatterbox_tts.py"
+export PYTORCH_ENABLE_MPS_FALLBACK=1
+export HF_HOME="${HF_HOME:-$HOME/.local/opt/vf-venvs/.hf-cache}"
+exec "$VENV/bin/python" "$HELPER" "$@"

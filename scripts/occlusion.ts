@@ -13,7 +13,15 @@
  * exists; the call matches the agreed signature exactly.
  */
 
-import { hasBinary, isMain, log, readJson, writeJson } from "./_util.js";
+import {
+  existsSync,
+  hasBinary,
+  isMain,
+  log,
+  readJson,
+  tryRun,
+  writeJson,
+} from "./_util.js";
 import type { AspectRatio, BoundingBox } from "../src/types.js";
 
 /** Exact signature of the solver another agent is authoring. */
@@ -61,27 +69,71 @@ export interface DetectedBoxes {
   productBoxes: BoundingBox[];
 }
 
+/** Shape of the `mediapipe` detector CLI's stdout JSON. */
+interface DetectorOutput {
+  faceBoxes?: BoundingBox[];
+  productBoxes?: BoundingBox[];
+  error?: string;
+}
+
 /**
  * Detect faces + product regions across a block's frame span.
  *
- * DEGRADED: real integration runs MediaPipe FaceDetection (or OpenCV DNN) and a
- * product detector (annotated regions / OpenCV) over sampled frames, returning
- * normalised boxes. No detector binary here ⇒ empty detection.
+ * REAL integration: shells out to the `mediapipe` detector CLI
+ * (integrations/mediapipe_detect.py) which samples frames over [start,end] and
+ * returns normalised face boxes via MediaPipe FaceDetection. Product detection
+ * stays empty (no reliable brand-agnostic detector), which the solver treats as
+ * "no product constraint". Degrades to an empty detection — never invented
+ * boxes — when the detector binary is missing, the video is absent, or the run
+ * fails, so the solver falls back to the preferred anchor.
  */
 export function detectBoxes(
-  _video: string,
-  _startFrame: number,
-  _endFrame: number,
+  video: string,
+  startFrame: number,
+  endFrame: number,
 ): DetectedBoxes {
-  // No detector CLI is wired in this environment; a MediaPipe/OpenCV script
-  // would be shelled to here. Absent that, degrade to an empty detection.
+  const empty: DetectedBoxes = { faceBoxes: [], productBoxes: [] };
+
+  if (!video || !existsSync(video)) {
+    return empty; // no frames to sample; solver uses preferred anchor
+  }
   if (!hasBinary("mediapipe")) {
     log.degraded(
       "no face/product detector — needs MediaPipe (python) or OpenCV DNN; " +
         "returning empty boxes so the solver uses the preferred anchor",
     );
+    return empty;
   }
-  return { faceBoxes: [], productBoxes: [] };
+
+  const stdout = tryRun("mediapipe", [
+    "--video",
+    video,
+    "--start-frame",
+    String(Math.max(0, Math.floor(startFrame))),
+    "--end-frame",
+    String(Math.max(0, Math.floor(endFrame))),
+    "--samples",
+    "5",
+  ]);
+  if (stdout == null) {
+    log.degraded("mediapipe run failed (ENOENT) — empty detection");
+    return empty;
+  }
+
+  try {
+    const parsed = JSON.parse(stdout.trim()) as DetectorOutput;
+    if (parsed.error) {
+      log.degraded(`mediapipe: ${parsed.error} — empty detection`);
+      return empty;
+    }
+    return {
+      faceBoxes: parsed.faceBoxes ?? [],
+      productBoxes: parsed.productBoxes ?? [],
+    };
+  } catch {
+    log.degraded("mediapipe output was not JSON — empty detection");
+    return empty;
+  }
 }
 
 /** Solve anchors for a set of caption blocks. */

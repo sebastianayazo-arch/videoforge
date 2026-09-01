@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# VideoForge → WhisperX wrapper (Apple Silicon / CPU).
+#
+# transcribe.ts shells out to `whisperx <in> --output_dir D --output_format json
+# --model M [--language L] [--diarize]`. On a Mac there is no CUDA and CTranslate2
+# has no Metal backend, so we force CPU + int8 (float16 is unsupported on CPU) and
+# use the performance cores. We only inject a flag the caller did not already pass,
+# so an explicit override still wins.
+set -euo pipefail
+
+VENV="$HOME/.local/opt/vf-venvs/whisperx"
+BIN="$VENV/bin/whisperx"
+
+args=("$@")
+has() { for a in "${args[@]}"; do [[ "$a" == "$1" ]] && return 0; done; return 1; }
+
+has --device       || args+=(--device cpu)
+has --compute_type || args+=(--compute_type int8)
+has --threads      || args+=(--threads 8)
+# Model cache under the user dir so weights persist across runs.
+export HF_HOME="${HF_HOME:-$HOME/.local/opt/vf-venvs/.hf-cache}"
+
+exec "$BIN" "${args[@]}"

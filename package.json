@@ -30,16 +30,19 @@
   },
   "dependencies": {
     "@remotion/captions": "4.0.519",
-    "@remotion/transitions": "4.0.519",
     "@remotion/media-utils": "4.0.519",
-    "remotion": "4.0.519",
+    "@remotion/transitions": "4.0.519",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "remotion": "4.0.519",
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@types/react": "18.3.12",
+    "@remotion/bundler": "^4.0.519",
+    "@remotion/cli": "^4.0.519",
+    "@remotion/renderer": "^4.0.519",
     "@types/node": "20.14.0",
+    "@types/react": "18.3.12",
     "tsx": "4.23.13",
     "typescript": "5.5.4"
   }

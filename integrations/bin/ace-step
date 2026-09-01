@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# VideoForge → ACE-Step (cloud fallback) wrapper.
+# music.ts shells out with:
+#   ace-step --prompt "tags" --bpm N --duration D --output OUT.wav
+# We generate ORIGINAL, paid-safe music via the free ACE-Step HuggingFace Space
+# (gradio_client) because local 3.5B inference doesn't fit a 16 GB M-series Mac.
+set -euo pipefail
+VENV="$HOME/.local/opt/vf-venvs/acestep"
+HELPER="$HOME/code/videoforge/integrations/acestep_cloud.py"
+export VF_ACESTEP_SPACE="${VF_ACESTEP_SPACE:-ACE-Step/ACE-Step}"
+exec "$VENV/bin/python" "$HELPER" "$@"
