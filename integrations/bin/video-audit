@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# VideoForge → Video Ad Auditor wrapper (Módulo 13).
+# Runs the plan-aware QC pass over a rendered ad. Uses the mediapipe venv (cv2 +
+# mediapipe for the layout / text-over-face checks); shells to ffmpeg for signal.
+#   video-audit --video OUT.mp4 --plan video-plan.json [--out a.json --md a.md]
+#               [--vlm none|frames]
+# VLM pass (optional) is OpenAI-compatible; point it at a backend via env:
+#   VF_VLM_BASE_URL (default http://localhost:11434/v1)  VF_VLM_MODEL (qwen3-vl:8b)
+#   VF_VLM_API_KEY  (default "ollama")
+set -euo pipefail
+VENV="$HOME/.local/opt/vf-venvs/mediapipe"
+HELPER="$HOME/code/videoforge/integrations/video_audit.py"
+# Silence MediaPipe's noisy absl/glog lines so stdout stays the clean report.
+exec "$VENV/bin/python" "$HELPER" "$@" 2>/dev/null
