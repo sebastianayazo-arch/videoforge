@@ -35,8 +35,13 @@ brand book. El próximo video debe arrancar con esto ya aplicado.
   del zoom-punch se ve raro → preferir **corte limpio**.
 - **Hook sonoro** de transformación: whoosh suave + sub sutil (sin riser tonal ni
   tremolo, que sonaban artificiales).
-- **Hook de voz al inicio** (voz clonada expresiva, exaggeration ~0.75) para no
-  arrancar sin llamado de atención.
+- **Hook de voz al inicio** (voz clonada) para no arrancar sin llamado de atención.
+- **Voz para marketing** (ver `references/voice/marketing-voice.md` + herramienta
+  `integrations/voice_analyze.py`): la VO debe **empatar la cadencia de la modelo**
+  (medir pal/s, pitch, % silencio). Target short-form: 2.5–3.3 pal/s (150–200 WPM),
+  silencio <15%, pitch-std 20–45 Hz. Chatterbox: exaggeration 0.5–0.6 (no >0.7),
+  cfg_weight 0.5–0.65; post: silenceremove + atempo para clavar el ritmo. La VO
+  clonada tiende a salir lenta/pausada → siempre validar con voice_analyze.py.
 - **Voz de dirección vs modelo**: mutear los tramos con `voz_direccion` (audio de
   la directora en las tomas). Automatizar con el clasificador de transcribe.ts.
 - **Ángulo del producto**: es prenda **exterior** (es el outfit) que además moldea —

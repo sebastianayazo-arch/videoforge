@@ -73,8 +73,49 @@ export const AdCopy: React.FC<{
   const scale = block.entrance === "pop" ? 0.9 + 0.1 * inN : 1;
 
   const shadow = copyShadow(profile.outlineColor);
+  const drawn = interpolate(frame, [4, 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
+  const callout = block.callout ? (
+    <>
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", overflow: "visible", opacity: inN }}
+      >
+        <line
+          x1={block.anchor.x * 100}
+          y1={(block.anchor.y + 0.05) * 100}
+          x2={block.anchor.x * 100 + (block.callout!.x * 100 - block.anchor.x * 100) * drawn}
+          y2={(block.anchor.y + 0.05) * 100 + (block.callout!.y * 100 - (block.anchor.y + 0.05) * 100) * drawn}
+          stroke={profile.accentColor}
+          strokeWidth={2.4}
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      {/* round dot on the garment part (a div keeps it circular despite the
+          non-uniform viewBox). */}
+      <div
+        style={{
+          position: "absolute",
+          left: `${block.callout!.x * 100}%`,
+          top: `${block.callout!.y * 100}%`,
+          width: 18,
+          height: 18,
+          marginLeft: -9,
+          marginTop: -9,
+          borderRadius: "50%",
+          background: profile.accentColor,
+          opacity: inN * drawn,
+          boxShadow: "0 0 0 4px rgba(255,255,255,0.25)",
+        }}
+      />
+    </>
+  ) : null;
 
   return (
+    <>
+    {callout}
     <div
       style={{
         position: "absolute",
@@ -119,6 +160,7 @@ export const AdCopy: React.FC<{
         );
       })}
     </div>
+    </>
   );
 };
 

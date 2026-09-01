@@ -475,6 +475,9 @@ export interface CopyBlock {
   align: "left" | "center";
   lines: CopyLine[];
   entrance: "fade-up" | "pop" | "none";
+  /** Feature callout: a thin line + dot pointing from the copy to a garment part
+   *  at (x,y) normalised composition coords (a Salomé treatment). */
+  callout?: { x: number; y: number };
 }
 
 export interface Boundary {
