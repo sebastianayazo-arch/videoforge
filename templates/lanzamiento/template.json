@@ -1,0 +1,70 @@
+{
+  "branch": "lanzamiento",
+  "framework": "4U",
+  "targetDurationSec": 20,
+  "narrationMode": "cloned",
+  "narrationNote": "VO clonada en registro energético para el reveal; puede combinarse con voz a cámara del modelo para presentar la nueva referencia.",
+  "energyProfile": [
+    { "atSec": 0, "energy": 0.7 },
+    { "atSec": 2, "energy": 0.65 },
+    { "atSec": 5, "energy": 0.8 },
+    { "atSec": 8, "energy": 0.95 },
+    { "atSec": 12, "energy": 0.85 },
+    { "atSec": 16, "energy": 0.8 },
+    { "atSec": 20, "energy": 0.75 }
+  ],
+  "captionBias": {
+    "dominantClasses": ["nombre_producto", "keyword_beneficio"],
+    "notes": "El nombre de la nueva referencia domina y se destaca (two-tone/display). Beneficios de novedad ('nuevo', 'ahora en'). El reveal es el pico de energía."
+  },
+  "transitionTendencies": {
+    "preferred": ["hard-cut", "shape-mask", "action-cut-whip"],
+    "atReveal": "shape-mask brandeado (forma del logo) o whip en el momento del reveal — gasta budget flashy",
+    "avoid": ["glitch"],
+    "flashyBudgetHint": 2
+  },
+  "sceneSkeleton": [
+    {
+      "id": "s1-teaser",
+      "purpose": "Teaser: anticipar la novedad sin revelarla del todo (tensión)",
+      "roughSec": 3,
+      "energy": 0.7,
+      "captionBias": "conector",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s2-buildup",
+      "purpose": "Build-up de energía hacia el reveal (riser en audio)",
+      "roughSec": 4,
+      "energy": 0.8,
+      "captionBias": "keyword_beneficio",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s3-reveal",
+      "purpose": "Reveal de la nueva referencia: pico de energía, shape-mask brandeado + impact/whoosh",
+      "roughSec": 4,
+      "energy": 0.95,
+      "captionBias": "nombre_producto",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s4-beneficios",
+      "purpose": "Qué la hace nueva/mejor: beneficios sentidos de la referencia",
+      "roughSec": 5,
+      "energy": 0.82,
+      "captionBias": "keyword_beneficio",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s5-cta",
+      "purpose": "CTA de lanzamiento (ya disponible / pre-venta) + end card con sonic logo",
+      "roughSec": 4,
+      "energy": 0.78,
+      "captionBias": "accion_cta",
+      "voMode": "cloned"
+    }
+  ],
+  "defaultMusicMood": "confianza-elegante",
+  "templateNotes": "El reveal (s3) es el corazón: transición brandeada + SFX obligatorio (shape-mask ⇒ impact, whip ⇒ whoosh). El re-hook de retención cae en el build-up. Compliance: novedad y beneficio sentido, nunca claim de peso ni 'transformación' corporal."
+}

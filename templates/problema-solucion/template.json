@@ -1,0 +1,70 @@
+{
+  "branch": "problema-solucion",
+  "framework": "PAS",
+  "targetDurationSec": 22,
+  "narrationMode": "cloned",
+  "narrationNote": "VO clonada (chatterbox) por defecto; requiere voice.consent=true. Puede sustituirse por voz a cámara (recorded) si hay clip del modelo.",
+  "energyProfile": [
+    { "atSec": 0, "energy": 0.55 },
+    { "atSec": 2, "energy": 0.6 },
+    { "atSec": 5, "energy": 0.45 },
+    { "atSec": 9, "energy": 0.5 },
+    { "atSec": 13, "energy": 0.75 },
+    { "atSec": 18, "energy": 0.7 },
+    { "atSec": 22, "energy": 0.6 }
+  ],
+  "captionBias": {
+    "dominantClasses": ["negacion_dolor", "keyword_beneficio"],
+    "notes": "Problema se pinta con negacion_dolor (contraste), solución con keyword_beneficio. Bloques 2–4 palabras. El beneficio recibe el énfasis; el dolor nunca es la promesa."
+  },
+  "transitionTendencies": {
+    "preferred": ["hard-cut", "match-cut"],
+    "atProblemToSolution": "match-cut o hard-cut en beat para marcar el giro P→S",
+    "avoid": ["glitch", "crossfade"],
+    "flashyBudgetHint": 1
+  },
+  "sceneSkeleton": [
+    {
+      "id": "s1-gancho",
+      "purpose": "Gancho de reconocimiento: nombrar la molestia cotidiana (compliant, sin vergüenza corporal)",
+      "roughSec": 3,
+      "energy": 0.6,
+      "captionBias": "negacion_dolor",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s2-agitacion",
+      "purpose": "Agitar el problema: la faja que se enrolla, aprieta o se marca — situación real",
+      "roughSec": 5,
+      "energy": 0.45,
+      "captionBias": "negacion_dolor",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s3-transicion-solucion",
+      "purpose": "Giro a la solución: presentar el producto como la aliada",
+      "roughSec": 4,
+      "energy": 0.6,
+      "captionBias": "nombre_producto",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s4-beneficio-demo",
+      "purpose": "Mostrar el beneficio sentido en uso real: moldea sin marcarse, cómoda todo el día",
+      "roughSec": 6,
+      "energy": 0.75,
+      "captionBias": "keyword_beneficio",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s5-cta",
+      "purpose": "CTA + end card con sonic logo",
+      "roughSec": 4,
+      "energy": 0.65,
+      "captionBias": "accion_cta",
+      "voMode": "cloned"
+    }
+  ],
+  "defaultMusicMood": "confianza-elegante",
+  "templateNotes": "PAS clásico. La regla de oro compliant: el 'problema' es una molestia del PRODUCTO anterior o del uso (se enrolla, aprieta, se marca), nunca el cuerpo de la persona. Prohibido cualquier claim de peso. El re-hook natural va en s3 (el giro P→S)."
+}

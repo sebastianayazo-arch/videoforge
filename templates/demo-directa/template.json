@@ -1,0 +1,61 @@
+{
+  "branch": "demo-directa",
+  "framework": "resultado-primero",
+  "targetDurationSec": 18,
+  "narrationMode": "cloned",
+  "narrationNote": "VO clonada por defecto; funciona muy bien con voz a cámara (recorded) mostrando el producto en mano.",
+  "energyProfile": [
+    { "atSec": 0, "energy": 0.8 },
+    { "atSec": 2, "energy": 0.75 },
+    { "atSec": 5, "energy": 0.65 },
+    { "atSec": 9, "energy": 0.7 },
+    { "atSec": 13, "energy": 0.6 },
+    { "atSec": 18, "energy": 0.6 }
+  ],
+  "captionBias": {
+    "dominantClasses": ["keyword_beneficio", "nombre_producto"],
+    "notes": "Beneficio primero, siempre traduciendo la feature ('compresión de 3 niveles' → 'te moldea sin que se note'). El producto se nombra pronto. Números presentes pero al servicio del beneficio."
+  },
+  "transitionTendencies": {
+    "preferred": ["hard-cut", "action-cut-whip", "zoom-punch"],
+    "onProductDetail": "zoom-punch en beat para el detalle (costura plana, tela) — cuenta contra el budget flashy",
+    "avoid": ["glitch", "crossfade"],
+    "flashyBudgetHint": 1
+  },
+  "sceneSkeleton": [
+    {
+      "id": "s1-resultado",
+      "purpose": "Resultado primero: el look/beneficio final en pantalla desde el frame 0",
+      "roughSec": 3,
+      "energy": 0.8,
+      "captionBias": "keyword_beneficio",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s2-producto",
+      "purpose": "Presentar el producto y traducir su feature clave a beneficio sentido",
+      "roughSec": 4,
+      "energy": 0.7,
+      "captionBias": "nombre_producto",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s3-demo-detalle",
+      "purpose": "Demo del detalle que sustenta el beneficio (costura invisible, firmeza por niveles) en uso real",
+      "roughSec": 6,
+      "energy": 0.65,
+      "captionBias": "keyword_beneficio",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s4-cta",
+      "purpose": "CTA directo + end card con sonic logo",
+      "roughSec": 5,
+      "energy": 0.6,
+      "captionBias": "accion_cta",
+      "voMode": "cloned"
+    }
+  ],
+  "defaultMusicMood": "energia-latina-suave",
+  "templateNotes": "Aprendizaje 2026-08-14: NUNCA feature primero (dd-feature-first-v1 archivado, retención 0.49). Siempre resultado/beneficio en el frame 0. Rinde mejor en 4:5 que en 9:16 para el detalle de producto; considerar reframe. La 'compresión' se demuestra como comodidad, no como claim médico."
+}

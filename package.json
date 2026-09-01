@@ -1,0 +1,46 @@
+{
+  "name": "videoforge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Programmatic video production: raw clips → publishable, ad-ready short-form video with brand identity, smart captions, motivated transitions, licensed audio and category compliance.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "ingest": "tsx scripts/ingest.ts",
+    "brand:ingest": "tsx scripts/brand-ingest.ts",
+    "transcribe": "tsx scripts/transcribe.ts",
+    "script": "tsx scripts/script-engine.ts",
+    "voice": "tsx scripts/voice.ts",
+    "music": "tsx scripts/music.ts",
+    "trend-audio": "tsx scripts/trend-audio.ts",
+    "color": "tsx scripts/color.ts",
+    "stabilize": "tsx scripts/stabilize.ts",
+    "occlusion": "tsx scripts/occlusion.ts",
+    "policy-check": "tsx scripts/policy-check.ts",
+    "retention": "tsx scripts/retention.ts",
+    "variants": "tsx scripts/variants.ts",
+    "qc": "tsx scripts/qc.ts",
+    "qc:captions": "tsx scripts/qc-captions.ts",
+    "qc:transitions": "tsx scripts/qc-transitions.ts",
+    "qc:color": "tsx scripts/qc-color.ts",
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --import tsx test/*.test.ts"
+  },
+  "dependencies": {
+    "@remotion/captions": "4.0.519",
+    "@remotion/transitions": "4.0.519",
+    "@remotion/media-utils": "4.0.519",
+    "remotion": "4.0.519",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/node": "20.14.0",
+    "tsx": "4.23.13",
+    "typescript": "5.5.4"
+  }
+}

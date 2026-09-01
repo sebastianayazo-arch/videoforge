@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoforge.dev/schemas/brand-profile.schema.json",
+  "title": "BrandProfile",
+  "description": "Mirrors the BrandProfile interface in src/types.ts. Validates brands/<marca>/brand-profile.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "brand",
+    "category",
+    "palette",
+    "tone",
+    "captions",
+    "voice",
+    "imageRights",
+    "transitions",
+    "color",
+    "copy",
+    "performance",
+    "musicMoods"
+  ],
+  "properties": {
+    "brand": { "type": "string" },
+    "category": { "enum": ["shapewear", "beauty", "apparel", "other"] },
+    "palette": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/hex" },
+      "minItems": 1
+    },
+    "logo": { "type": "string" },
+    "tone": { "type": "string" },
+    "captions": { "$ref": "#/$defs/brandCaptionsProfile" },
+    "voice": { "$ref": "#/$defs/brandVoiceProfile" },
+    "imageRights": { "$ref": "#/$defs/brandImageRights" },
+    "transitions": { "$ref": "#/$defs/brandTransitionsProfile" },
+    "color": { "$ref": "#/$defs/brandColorProfile" },
+    "copy": { "$ref": "#/$defs/brandCopyProfile" },
+    "performance": { "$ref": "#/$defs/brandPerformanceProfile" },
+    "musicMoods": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/musicMood" },
+      "minItems": 1
+    },
+    "sonicLogo": { "type": "string" },
+    "degraded": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "hex": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{3,8}$"
+    },
+    "isoDate": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "transitionType": {
+      "enum": [
+        "hard-cut",
+        "action-cut-whip",
+        "match-cut",
+        "invisible-cut",
+        "crossfade",
+        "luma-matte",
+        "shape-mask",
+        "zoom-punch",
+        "speed-ramp",
+        "glitch"
+      ]
+    },
+    "branch": {
+      "enum": [
+        "problema-solucion",
+        "demo-directa",
+        "oferta-urgencia",
+        "ugc-testimonio",
+        "lanzamiento"
+      ]
+    },
+    "platform": { "enum": ["tiktok", "instagram", "youtube", "meta"] },
+    "brandCaptionsProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "h1Font",
+        "h2Font",
+        "baseFont",
+        "accentColor",
+        "highlightColor",
+        "baseTextColor",
+        "outlineColor",
+        "contrastStrategy",
+        "diacriticsVerified"
+      ],
+      "properties": {
+        "h1Font": { "type": "string" },
+        "h2Font": { "type": "string" },
+        "baseFont": { "type": "string" },
+        "scriptFont": { "type": "string" },
+        "accentColor": { "$ref": "#/$defs/hex" },
+        "highlightColor": { "$ref": "#/$defs/hex" },
+        "baseTextColor": { "$ref": "#/$defs/hex" },
+        "outlineColor": { "$ref": "#/$defs/hex" },
+        "contrastStrategy": { "enum": ["outline", "plate", "both"] },
+        "diacriticsVerified": { "type": "boolean" }
+      }
+    },
+    "voiceSample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file"],
+      "properties": {
+        "file": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "brandVoiceProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["samples", "consent", "engine"],
+      "properties": {
+        "samples": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/voiceSample" }
+        },
+        "consent": { "type": "boolean" },
+        "consentDate": { "$ref": "#/$defs/isoDate" },
+        "engine": { "enum": ["chatterbox", "qwen3-tts", "fish-speech"] }
+      }
+    },
+    "modelRelease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["modelId", "authorizedForPaid"],
+      "properties": {
+        "modelId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "faceRef": { "type": "string" },
+        "authorizedForPaid": { "type": "boolean" },
+        "authorizedUntil": { "$ref": "#/$defs/isoDate" }
+      }
+    },
+    "brandImageRights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["releases"],
+      "properties": {
+        "releases": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/modelRelease" }
+        }
+      }
+    },
+    "brandTransitionsProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weights"],
+      "properties": {
+        "weights": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/transitionType" },
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "banned": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/transitionType" }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "brandColorProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["temperature", "contrast", "saturation", "skinHueRange"],
+      "properties": {
+        "temperature": { "enum": ["warm", "neutral", "cool"] },
+        "contrast": { "enum": ["low", "medium", "high"] },
+        "saturation": { "enum": ["muted", "natural", "punchy"] },
+        "lut": { "type": "string" },
+        "skinHueRange": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    },
+    "brandCopyProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hookFormulas", "ctaFormulas", "bannedWords"],
+      "properties": {
+        "hookFormulas": { "type": "array", "items": { "type": "string" } },
+        "ctaFormulas": { "type": "array", "items": { "type": "string" } },
+        "bannedWords": { "type": "array", "items": { "type": "string" } },
+        "toneNotes": { "type": "string" }
+      }
+    },
+    "performanceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["videoId", "date", "platform", "branch", "hookId"],
+      "properties": {
+        "videoId": { "type": "string" },
+        "date": { "$ref": "#/$defs/isoDate" },
+        "platform": { "$ref": "#/$defs/platform" },
+        "branch": { "$ref": "#/$defs/branch" },
+        "hookId": { "type": "string" },
+        "retention3s": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ctr": { "type": "number", "minimum": 0, "maximum": 1 },
+        "conversion": { "type": "number", "minimum": 0, "maximum": 1 },
+        "note": { "type": "string" }
+      }
+    },
+    "brandPerformanceProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["records", "winningHooks", "winningBranches", "winningMusicMoods", "archived"],
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/performanceRecord" }
+        },
+        "winningHooks": { "type": "array", "items": { "type": "string" } },
+        "winningBranches": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/branch" }
+        },
+        "winningMusicMoods": { "type": "array", "items": { "type": "string" } },
+        "archived": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "musicMood": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "tags", "bpm"],
+      "properties": {
+        "name": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "bpm": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    }
+  }
+}

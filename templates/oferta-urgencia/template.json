@@ -1,0 +1,61 @@
+{
+  "branch": "oferta-urgencia",
+  "framework": "4U",
+  "targetDurationSec": 15,
+  "narrationMode": "cloned",
+  "narrationNote": "VO clonada en registro energético (carolina-energetica-02). Ritmo alto, sin pausas largas.",
+  "energyProfile": [
+    { "atSec": 0, "energy": 0.85 },
+    { "atSec": 2, "energy": 0.9 },
+    { "atSec": 5, "energy": 0.8 },
+    { "atSec": 9, "energy": 0.88 },
+    { "atSec": 13, "energy": 0.92 },
+    { "atSec": 15, "energy": 0.8 }
+  ],
+  "captionBias": {
+    "dominantClasses": ["numero_dato", "accion_cta"],
+    "notes": "Números al máximo: precio, descuento, stock, plazo. numero_dato domina cada bloque y suele recibir el énfasis. El CTA cierra. Sin claims de peso; la urgencia es de stock/tiempo, no de resultado."
+  },
+  "transitionTendencies": {
+    "preferred": ["hard-cut", "zoom-punch"],
+    "onNumberReveal": "zoom-punch/hard-cut en beat justo cuando aparece el número clave",
+    "avoid": ["glitch", "crossfade", "invisible-cut"],
+    "flashyBudgetHint": 2
+  },
+  "sceneSkeleton": [
+    {
+      "id": "s1-dato-oferta",
+      "purpose": "Abrir con el dato al frente: descuento o stock limitado (aprendizaje of-dato-stock)",
+      "roughSec": 3,
+      "energy": 0.9,
+      "captionBias": "numero_dato",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s2-producto-valor",
+      "purpose": "Producto + por qué vale la pena ahora (útil, urgente)",
+      "roughSec": 4,
+      "energy": 0.82,
+      "captionBias": "keyword_beneficio",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s3-condiciones",
+      "purpose": "Condición de la oferta: plazo, tallas disponibles, envío (específico y ultra-concreto)",
+      "roughSec": 4,
+      "energy": 0.88,
+      "captionBias": "numero_dato",
+      "voMode": "cloned"
+    },
+    {
+      "id": "s4-cta-urgente",
+      "purpose": "CTA con urgencia real + end card con sonic logo",
+      "roughSec": 4,
+      "energy": 0.85,
+      "captionBias": "accion_cta",
+      "voMode": "cloned"
+    }
+  ],
+  "defaultMusicMood": "urgencia-oferta",
+  "templateNotes": "Aprendizaje 2026-08-28: la urgencia funciona con DATO concreto, no con grito genérico (of-gancho-lento-v1 archivado). El número clave va en el primer bloque. NUNCA crossfade en ofertas (regla del motor). La urgencia debe ser verdadera (stock/plazo real) para evitar bandera amarilla de compliance."
+}

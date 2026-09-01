@@ -1,0 +1,39 @@
+# dependencies
+node_modules/
+# remotion / build output
+/out
+out/
+build/
+.remotion/
+# media working dirs (large binaries never belong in git)
+work/
+renders/
+clips/
+# heavy video / audio — never in git
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.m4v
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.flac
+*.ogg
+# voice samples (audio de clonación) — se mantienen solo los README placeholder
+brands/*/voice-samples/*
+!brands/*/voice-samples/README.md
+# sonic logo / luts binarios — mantener README
+brands/*/sonic-logo/*
+!brands/*/sonic-logo/README.md
+*.cube
+!templates/**/*.cube
+# transcripts / analysis caches
+cache/
+*.whisperx.json
+# env & local
+.env
+.env.local
+.DS_Store

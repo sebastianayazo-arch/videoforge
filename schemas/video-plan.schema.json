@@ -1,0 +1,376 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoforge.dev/schemas/video-plan.schema.json",
+  "title": "VideoPlan",
+  "description": "Mirrors the VideoPlan interface in src/types.ts — the master, approvable plan document.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "brand",
+    "intake",
+    "branch",
+    "framework",
+    "fps",
+    "durationFrames",
+    "scenes",
+    "boundaries",
+    "energyCurve",
+    "music",
+    "sfx",
+    "retention",
+    "hookVariants",
+    "compliance"
+  ],
+  "properties": {
+    "version": { "type": "number" },
+    "brand": { "type": "string" },
+    "intake": { "$ref": "#/$defs/intake" },
+    "branch": { "$ref": "#/$defs/branch" },
+    "framework": { "$ref": "#/$defs/copyFramework" },
+    "fps": { "type": "number" },
+    "durationFrames": { "type": "number" },
+    "scenes": { "type": "array", "items": { "$ref": "#/$defs/scene" } },
+    "boundaries": { "type": "array", "items": { "$ref": "#/$defs/boundary" } },
+    "energyCurve": { "type": "array", "items": { "$ref": "#/$defs/energyPoint" } },
+    "music": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan"],
+      "properties": {
+        "plan": { "$ref": "#/$defs/musicMood" },
+        "track": { "$ref": "#/$defs/musicTrack" }
+      }
+    },
+    "sfx": { "type": "array", "items": { "$ref": "#/$defs/sfxCue" } },
+    "retention": { "$ref": "#/$defs/retentionPlan" },
+    "hookVariants": { "type": "array", "items": { "$ref": "#/$defs/hookVariant" } },
+    "compliance": { "$ref": "#/$defs/complianceReport" },
+    "qc": { "$ref": "#/$defs/qcReport" }
+  },
+  "$defs": {
+    "branch": {
+      "enum": [
+        "problema-solucion",
+        "demo-directa",
+        "oferta-urgencia",
+        "ugc-testimonio",
+        "lanzamiento"
+      ]
+    },
+    "copyFramework": { "enum": ["PAS", "4U", "resultado-primero", "ugc-literal"] },
+    "platform": { "enum": ["tiktok", "instagram", "youtube", "meta"] },
+    "market": { "enum": ["CO", "MX", "US-latino", "other"] },
+    "aspectRatio": { "enum": ["9:16", "4:5", "1:1"] },
+    "captionClass": {
+      "enum": [
+        "keyword_beneficio",
+        "numero_dato",
+        "nombre_producto",
+        "accion_cta",
+        "conector",
+        "negacion_dolor"
+      ]
+    },
+    "captionLevel": { "enum": ["H1", "H2", "base"] },
+    "transitionType": {
+      "enum": [
+        "hard-cut",
+        "action-cut-whip",
+        "match-cut",
+        "invisible-cut",
+        "crossfade",
+        "luma-matte",
+        "shape-mask",
+        "zoom-punch",
+        "speed-ramp",
+        "glitch"
+      ]
+    },
+    "complianceLight": { "enum": ["green", "yellow", "red"] },
+    "musicSource": {
+      "enum": [
+        "ace-step-original",
+        "free-multiplatform",
+        "tiktok-cml",
+        "meta-sound-collection",
+        "youtube-audio-library",
+        "general-sounds"
+      ]
+    },
+    "sfxKind": {
+      "enum": [
+        "riser",
+        "impact",
+        "whoosh",
+        "tick-pop",
+        "sub-drop",
+        "notification-original",
+        "product-asmr",
+        "silence-cut"
+      ]
+    },
+    "intake": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "objective",
+        "platforms",
+        "audience",
+        "productAngle",
+        "cta",
+        "durationSec",
+        "market",
+        "paid",
+        "adPlatforms",
+        "ratios"
+      ],
+      "properties": {
+        "objective": { "type": "string" },
+        "platforms": { "type": "array", "items": { "$ref": "#/$defs/platform" } },
+        "audience": { "type": "string" },
+        "productAngle": { "type": "string" },
+        "cta": { "type": "string" },
+        "durationSec": { "type": "number" },
+        "restrictions": { "type": "string" },
+        "market": { "$ref": "#/$defs/market" },
+        "paid": { "type": "boolean" },
+        "adPlatforms": { "type": "array", "items": { "$ref": "#/$defs/platform" } },
+        "ratios": { "type": "array", "items": { "$ref": "#/$defs/aspectRatio" } }
+      }
+    },
+    "captionToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "klass", "emphasised"],
+      "properties": {
+        "text": { "type": "string" },
+        "klass": { "$ref": "#/$defs/captionClass" },
+        "emphasised": { "type": "boolean" }
+      }
+    },
+    "wordFrame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "startFrame", "endFrame"],
+      "properties": {
+        "text": { "type": "string" },
+        "startFrame": { "type": "number" },
+        "endFrame": { "type": "number" }
+      }
+    },
+    "captionBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "tokens",
+        "level",
+        "startFrame",
+        "endFrame",
+        "wordFrames",
+        "anchor",
+        "entrance",
+        "beatAligned"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "tokens": { "type": "array", "items": { "$ref": "#/$defs/captionToken" } },
+        "level": { "$ref": "#/$defs/captionLevel" },
+        "startFrame": { "type": "number" },
+        "endFrame": { "type": "number" },
+        "wordFrames": { "type": "array", "items": { "$ref": "#/$defs/wordFrame" } },
+        "anchor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" }
+          }
+        },
+        "entrance": { "enum": ["fade", "pop", "slide-up", "typewriter"] },
+        "beatAligned": { "type": "boolean" }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "clipId", "inFrame", "outFrame", "purpose", "captions", "energy"],
+      "properties": {
+        "id": { "type": "string" },
+        "clipId": { "type": "string" },
+        "inFrame": { "type": "number" },
+        "outFrame": { "type": "number" },
+        "purpose": { "type": "string" },
+        "vo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text", "source"],
+          "properties": {
+            "text": { "type": "string" },
+            "source": { "enum": ["recorded", "cloned"] }
+          }
+        },
+        "captions": { "type": "array", "items": { "$ref": "#/$defs/captionBlock" } },
+        "energy": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "transitionDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "reason", "flashy", "durationFrames"],
+      "properties": {
+        "type": { "$ref": "#/$defs/transitionType" },
+        "reason": { "type": "string" },
+        "sfx": { "type": "string" },
+        "flashy": { "type": "boolean" },
+        "durationFrames": { "type": "number" }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fromScene", "decision"],
+      "properties": {
+        "fromScene": { "type": "number" },
+        "decision": { "$ref": "#/$defs/transitionDecision" }
+      }
+    },
+    "energyPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["atSec", "energy"],
+      "properties": {
+        "atSec": { "type": "number" },
+        "energy": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "musicMood": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "tags", "bpm"],
+      "properties": {
+        "name": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "bpm": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    },
+    "musicTrack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "source", "license", "paidSafe"],
+      "properties": {
+        "file": { "type": "string" },
+        "source": { "$ref": "#/$defs/musicSource" },
+        "license": { "type": "string" },
+        "paidSafe": { "type": "boolean" },
+        "bpm": { "type": "number" }
+      }
+    },
+    "sfxCue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "source", "license", "frame", "reason"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "$ref": "#/$defs/sfxKind" },
+        "file": { "type": "string" },
+        "source": { "enum": ["generated", "free-verified"] },
+        "license": { "type": "string" },
+        "frame": { "type": "number" },
+        "reason": { "type": "string" }
+      }
+    },
+    "retentionPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reHooks", "maxDeadAirSec"],
+      "properties": {
+        "reHooks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["atSec", "kind", "note"],
+            "properties": {
+              "atSec": { "type": "number" },
+              "kind": { "type": "string" },
+              "note": { "type": "string" }
+            }
+          }
+        },
+        "maxDeadAirSec": { "type": "number" }
+      }
+    },
+    "hookVariant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "formulaId", "text", "approxSec"],
+      "properties": {
+        "id": { "type": "string" },
+        "formulaId": { "type": "string" },
+        "text": { "type": "string" },
+        "approxSec": { "type": "number" }
+      }
+    },
+    "complianceFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "light", "rule"],
+      "properties": {
+        "platform": { "$ref": "#/$defs/platform" },
+        "light": { "$ref": "#/$defs/complianceLight" },
+        "rule": { "type": "string" },
+        "offending": { "type": "string" },
+        "suggestion": { "type": "string" }
+      }
+    },
+    "complianceReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "findings", "overall"],
+      "properties": {
+        "category": { "enum": ["shapewear", "beauty", "apparel", "other"] },
+        "findings": { "type": "array", "items": { "$ref": "#/$defs/complianceFinding" } },
+        "overall": { "$ref": "#/$defs/complianceLight" }
+      }
+    },
+    "qcReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checks", "pass"],
+      "properties": {
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "pass"],
+            "properties": {
+              "name": { "type": "string" },
+              "pass": { "type": "boolean" },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "loudness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["integratedLUFS", "truePeakDb", "lra"],
+          "properties": {
+            "integratedLUFS": { "type": "number" },
+            "truePeakDb": { "type": "number" },
+            "lra": { "type": "number" }
+          }
+        },
+        "pass": { "type": "boolean" }
+      }
+    }
+  }
+}

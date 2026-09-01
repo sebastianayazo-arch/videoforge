@@ -1,0 +1,17 @@
+{
+  "note": "Catálogo de SFX de atención (Módulo 9A.2). Todos con licencia LIBRE verificada o GENERADOS. Los archivos .wav se generan/colocan en esta carpeta (ignorados por git). Ningún SFX de fuente no verificada entra a un video con pauta=sí (registro en report.md).",
+  "policy": {
+    "paidSafeSources": ["generated", "free-verified"],
+    "forbidden": "pings reales de apps y meme sounds (marca registrada / sin licencia). Se generan ORIGINALES del mismo mecanismo psicológico."
+  },
+  "sfx": [
+    { "id": "riser-build-01", "kind": "riser", "source": "generated", "license": "generated-original", "use": "build hacia reveals y CTA" },
+    { "id": "impact-hit-01", "kind": "impact", "source": "generated", "license": "generated-original", "use": "aterrizaje de keyword H1 y precios" },
+    { "id": "whoosh-lr-01", "kind": "whoosh", "source": "generated", "license": "generated-original", "use": "transición, dirección izquierda→derecha" },
+    { "id": "whoosh-rl-01", "kind": "whoosh", "source": "generated", "license": "generated-original", "use": "transición, dirección derecha→izquierda" },
+    { "id": "tick-pop-01", "kind": "tick-pop", "source": "generated", "license": "generated-original", "use": "aparición de caption clase keyword/número" },
+    { "id": "sub-drop-01", "kind": "sub-drop", "source": "generated", "license": "generated-original", "use": "momento antes/después del reveal" },
+    { "id": "notify-original-01", "kind": "notification-original", "source": "generated", "license": "generated-original", "use": "cue estilo-notificación ORIGINAL (mecanismo pavloviano sin infringir marcas)" },
+    { "id": "asmr-tela-01", "kind": "product-asmr", "source": "generated", "license": "captured-or-synth", "use": "sonido táctil del producto: tela/ajuste/broche — capa sensorial de venta" }
+  ]
+}

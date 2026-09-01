@@ -1,0 +1,62 @@
+{
+  "branch": "ugc-testimonio",
+  "framework": "ugc-literal",
+  "targetDurationSec": 24,
+  "narrationMode": "recorded",
+  "narrationNote": "Voz a cámara REAL del modelo (recorded). La autenticidad es el activo; no se clona el testimonio. Si el clip es de una invitada, verificar authorizedForPaid antes de pauta.",
+  "energyProfile": [
+    { "atSec": 0, "energy": 0.5 },
+    { "atSec": 2, "energy": 0.55 },
+    { "atSec": 6, "energy": 0.5 },
+    { "atSec": 12, "energy": 0.6 },
+    { "atSec": 18, "energy": 0.65 },
+    { "atSec": 24, "energy": 0.55 }
+  ],
+  "captionBias": {
+    "dominantClasses": ["keyword_beneficio", "negacion_dolor"],
+    "notes": "Captions literales, siguen el habla real (voz_modelo_a_camara ⇒ subtítulos sincronizados obligatorios). Se destacan las palabras de beneficio que la persona dice. Registro hablado, no publicitario."
+  },
+  "transitionTendencies": {
+    "preferred": ["hard-cut", "invisible-cut", "match-cut"],
+    "betweenBeats": "hard-cut para saltos del testimonio (jump cuts naturales de UGC)",
+    "onClose": "crossfade suave permitido solo en el cierre mood/íntimo",
+    "avoid": ["glitch", "zoom-punch"],
+    "flashyBudgetHint": 0
+  },
+  "sceneSkeleton": [
+    {
+      "id": "s1-testimonio-gancho",
+      "purpose": "Abrir con la frase literal del testimonio (Dejé de... / Llevo X y...) cámara en mano",
+      "roughSec": 4,
+      "energy": 0.55,
+      "captionBias": "negacion_dolor",
+      "voMode": "recorded"
+    },
+    {
+      "id": "s2-contexto",
+      "purpose": "Contexto real: cuándo la usa, por qué la eligió, honesto y cotidiano",
+      "roughSec": 6,
+      "energy": 0.5,
+      "captionBias": "conector",
+      "voMode": "recorded"
+    },
+    {
+      "id": "s3-beneficio-vivido",
+      "purpose": "Beneficio vivido en primera persona: comodidad, confianza, no tener que acomodarla",
+      "roughSec": 8,
+      "energy": 0.6,
+      "captionBias": "keyword_beneficio",
+      "voMode": "recorded"
+    },
+    {
+      "id": "s4-recomendacion-cta",
+      "purpose": "Recomendación natural + CTA suave + end card con sonic logo",
+      "roughSec": 6,
+      "energy": 0.6,
+      "captionBias": "accion_cta",
+      "voMode": "recorded"
+    }
+  ],
+  "defaultMusicMood": "intimo-testimonio",
+  "templateNotes": "Aprendizaje 2026-08-14: el testimonio literal superó a la demo pulida (ugc-dejede, retención 0.66). Cero producción publicitaria: jump cuts, luz natural, habla real. Budget flashy 0 — cualquier transición vistosa rompe la autenticidad. Compliance: el testimonio no puede afirmar pérdida de peso ni mostrar 'antes y después' con vergüenza corporal."
+}
