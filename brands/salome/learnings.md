@@ -56,5 +56,25 @@ brand book. El próximo video debe arrancar con esto ya aplicado.
   data URI** (así se hizo con el logo).
 - **Pixel format**: master a `yuv420p` limited-range (Remotion rinde yuvj420p full).
 
+## Ciclo 2 — POST-OP ref. 3003 (testimonio de la modelo)
+- **Investigar el producto en la web ANTES de escribir**: la ref. 3003 es
+  "Postquirúrgica Etapa 1: Lipo y BBL", compresión fuerte, busto abierto, forma
+  pre-adaptada, ~$229.000 COP. El precio/ángulo del copy salen de ahí (no inventar).
+  El video del ciclo 1 era la ref. **5503** (producto distinto).
+- **Voz = grabación de la modelo con lip-sync visible → cadencia BLOQUEADA.** No se
+  puede acelerar/ralentizar (atempo) sin desincronizar labios. `voice_analyze.py`
+  sirve como **lectura de QC** (el hook salió a 245 WPM, enérgico), no como algo a
+  corregir. La voz clonada solo aplica cuando NO hay cara hablando (B-roll).
+- **Reconstruir el VO desde los clips originales** por escena (mismo inFrame/lenF que
+  el render) → sync perfecto con lo que se ve; nivelar cada línea a −18 LUFS antes de
+  mezclar, luego comprimir + duckear música (sidechain) + master −14 LUFS 2 pasadas.
+- **Producto médico postquirúrgico = bandera sensible Meta** aunque policy-check dé
+  verde. Claims factuales/educativos, sin garantizar resultados, sin cirugía gráfica.
+- **ACE-Step cloud tiene cuota ZeroGPU** (Space anónimo): se agota y bloquea. Fallback
+  usado: derivar una cama del track original propio (atempo 0.72 + lowpass + reverb)
+  al mood íntimo. Swap por generación fresca cuando libere (o token HF).
+- El sistema demostró **consistencia**: mismo AdCopy (círculo a mano en 3003 y precio),
+  colores pág.35, tapa con wordmark real, cortes duros + flash en el giro.
+
 ## Performance (histórico previo)
 - Ganchos ganadores: `ps-teha-pasado`, `ugc-dejede`. Ramas: problema-solución, ugc-testimonio.
